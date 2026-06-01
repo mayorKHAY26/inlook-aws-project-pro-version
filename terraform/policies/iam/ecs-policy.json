@@ -1,0 +1,18 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ECSDeployment",
+      "Effect": "Allow",
+      "Action": [
+        "ecs:*",
+        "ec2:Describe*",
+        "elasticloadbalancing:Describe*",
+        "logs:*",
+        "cloudwatch:*",
+        "application-autoscaling:*"
+      ],
+      "Resource": "*"
+    }
+  ]
+}

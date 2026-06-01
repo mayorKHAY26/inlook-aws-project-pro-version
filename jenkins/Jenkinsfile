@@ -1,0 +1,94 @@
+pipeline {
+    agent any
+
+    environment {
+        APP_DISPLAY_NAME = 'inlook-webmail-Komotehinse-version'
+        APP_SAFE_NAME    = 'inlook-webmail-komotehinse'
+
+        AWS_REGION = 'us-east-1'
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Get AWS Account ID') {
+            steps {
+                script {
+                    env.AWS_ACCOUNT_ID = sh(
+                        script: "aws sts get-caller-identity --query Account --output text",
+                        returnStdout: true
+                    ).trim()
+
+                    env.BACKEND_ECR_REPO =
+                        "${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/inlook-webmail-komotehinse-backend"
+
+                    env.FRONTEND_ECR_REPO =
+                        "${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_REGION}.amazonaws.com/inlook-webmail-komotehinse-frontend"
+                }
+            }
+        }
+
+        stage('Build Backend') {
+            steps {
+                sh '''
+                docker build -t inlook-backend:${BUILD_NUMBER} app/backend
+                '''
+            }
+        }
+
+        stage('Build Frontend') {
+            steps {
+                sh '''
+                docker build -t inlook-frontend:${BUILD_NUMBER} app/frontend
+                '''
+            }
+        }
+
+        stage('Login to ECR') {
+            steps {
+                sh '''
+                aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+                '''
+            }
+        }
+
+        stage('Tag Images') {
+            steps {
+                sh '''
+                docker tag inlook-backend:${BUILD_NUMBER} ${BACKEND_ECR_REPO}:${BUILD_NUMBER}
+                docker tag inlook-frontend:${BUILD_NUMBER} ${FRONTEND_ECR_REPO}:${BUILD_NUMBER}
+
+                docker tag inlook-backend:${BUILD_NUMBER} ${BACKEND_ECR_REPO}:latest
+                docker tag inlook-frontend:${BUILD_NUMBER} ${FRONTEND_ECR_REPO}:latest
+                '''
+            }
+        }
+
+        stage('Push Images') {
+            steps {
+                sh '''
+                docker push ${BACKEND_ECR_REPO}:${BUILD_NUMBER}
+                docker push ${FRONTEND_ECR_REPO}:${BUILD_NUMBER}
+
+                docker push ${BACKEND_ECR_REPO}:latest
+                docker push ${FRONTEND_ECR_REPO}:latest
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "${APP_DISPLAY_NAME} build completed successfully."
+        }
+
+        failure {
+            echo "${APP_DISPLAY_NAME} build failed."
+        }
+    }
+}

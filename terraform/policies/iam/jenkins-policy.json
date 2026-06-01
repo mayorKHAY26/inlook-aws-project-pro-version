@@ -1,0 +1,18 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "JenkinsPipelineAccess",
+      "Effect": "Allow",
+      "Action": [
+        "ecr:*",
+        "ecs:*",
+        "logs:*",
+        "cloudwatch:*",
+        "sts:GetCallerIdentity",
+        "iam:PassRole"
+      ],
+      "Resource": "*"
+    }
+  ]
+}

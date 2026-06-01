@@ -1,0 +1,6 @@
+variable "project_name" {}
+variable "display_name" {}
+variable "environment" {}
+variable "vpc_id" {}
+variable "public_subnet_ids" {}
+variable "alb_sg_id" {}
