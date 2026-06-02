@@ -13,11 +13,15 @@ resource "aws_lb" "main" {
 }
 
 resource "aws_lb_target_group" "frontend" {
-  name        = "${substr(var.project_name, 0, 20)}-${var.environment}-tg"
+  name        = "${substr(var.project_name, 0, 18)}-${var.environment}-tg80"
   port        = 80
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
   target_type = "ip"
+
+  lifecycle {
+    create_before_destroy = true
+  }
 
   health_check {
     path                = "/"
