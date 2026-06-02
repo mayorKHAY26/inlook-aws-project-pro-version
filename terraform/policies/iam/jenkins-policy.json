@@ -10,7 +10,11 @@
         "logs:*",
         "cloudwatch:*",
         "sts:GetCallerIdentity",
-        "iam:PassRole"
+        "iam:PassRole",
+        "elasticloadbalancing:*",
+        "ec2:Describe*",
+        "servicediscovery:*",
+        "application-autoscaling:*"
       ],
       "Resource": "*"
     }

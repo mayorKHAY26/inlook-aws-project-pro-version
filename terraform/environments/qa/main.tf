@@ -40,24 +40,27 @@ module "load_balancing" {
 module "compute" {
   source = "../../modules/compute"
 
-  project_name       = var.project_name
-  display_name       = var.display_name
-  environment        = var.environment
-  aws_region         = var.aws_region
-  vpc_id             = module.networking.vpc_id
-  private_subnet_ids = module.networking.private_subnet_ids
-  ecs_sg_id          = module.networking.ecs_sg_id
-  target_group_arn   = module.load_balancing.target_group_arn
-  backend_ecr_url    = module.devops.backend_ecr_url
-  frontend_ecr_url   = module.devops.frontend_ecr_url
+  project_name           = var.project_name
+  display_name           = var.display_name
+  environment            = var.environment
+  aws_region             = var.aws_region
+  vpc_id                 = module.networking.vpc_id
+  private_subnet_ids     = module.networking.private_subnet_ids
+  ecs_sg_id              = module.networking.ecs_sg_id
+  target_group_arn       = module.load_balancing.target_group_arn
+  backend_ecr_url        = module.devops.backend_ecr_url
+  frontend_ecr_url       = module.devops.frontend_ecr_url
+  ecs_execution_role_arn = module.devops.ecs_execution_role_arn
 }
 
 module "database" {
   source = "../../modules/database"
 
-  project_name = var.project_name
-  display_name = var.display_name
-  environment  = var.environment
+  project_name       = var.project_name
+  display_name       = var.display_name
+  environment        = var.environment
+  private_subnet_ids = module.networking.private_subnet_ids
+  database_sg_id     = module.networking.database_sg_id
 }
 
 module "security_monitoring" {

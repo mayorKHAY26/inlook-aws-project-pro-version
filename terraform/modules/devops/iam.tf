@@ -36,7 +36,11 @@ resource "aws_iam_policy" "jenkins_policy" {
           "iam:PassRole",
           "logs:*",
           "cloudwatch:*",
-          "sts:GetCallerIdentity"
+          "sts:GetCallerIdentity",
+          "elasticloadbalancing:*",
+          "ec2:Describe*",
+          "servicediscovery:*",
+          "application-autoscaling:*"
         ]
         Resource = "*"
       }
