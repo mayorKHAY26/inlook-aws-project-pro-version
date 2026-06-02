@@ -16,3 +16,5 @@ variable "target_group_arn" {}
 variable "backend_ecr_url" {}
 
 variable "frontend_ecr_url" {}
+
+variable "ecs_execution_role_arn" {}

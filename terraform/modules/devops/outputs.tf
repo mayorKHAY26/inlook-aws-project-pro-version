@@ -17,3 +17,11 @@ output "jenkins_public_dns" {
 output "ecs_execution_role_arn" {
   value = aws_iam_role.ecs_execution_role.arn
 }
+
+output "jenkins_key_pair_name" {
+  value = aws_key_pair.jenkins.key_name
+}
+
+output "jenkins_private_key_file" {
+  value = local_file.jenkins_private_key.filename
+}

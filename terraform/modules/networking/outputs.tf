@@ -21,3 +21,7 @@ output "ecs_sg_id" {
 output "jenkins_sg_id" {
   value = aws_security_group.jenkins.id
 }
+
+output "database_sg_id" {
+  value = aws_security_group.database.id
+}

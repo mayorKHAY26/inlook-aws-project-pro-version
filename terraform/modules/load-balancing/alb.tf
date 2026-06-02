@@ -1,18 +1,19 @@
 resource "aws_lb" "main" {
-  name               = "${var.project_name}-${var.environment}-alb"
+  name               = "${substr(var.project_name, 0, 20)}-${var.environment}-alb"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [var.alb_sg_id]
   subnets            = var.public_subnet_ids
 
   tags = {
-    Name    = "${var.display_name}-${var.environment}-alb"
-    Project = var.display_name
+    Name        = "${var.display_name}-${var.environment}-alb"
+    Project     = var.display_name
+    Environment = var.environment
   }
 }
 
 resource "aws_lb_target_group" "frontend" {
-  name        = "${var.project_name}-${var.environment}-tg"
+  name        = "${substr(var.project_name, 0, 20)}-${var.environment}-tg"
   port        = 3000
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
@@ -29,7 +30,9 @@ resource "aws_lb_target_group" "frontend" {
   }
 
   tags = {
-    Name = "${var.display_name}-${var.environment}-frontend-tg"
+    Name        = "${var.display_name}-${var.environment}-frontend-tg"
+    Project     = var.display_name
+    Environment = var.environment
   }
 }
 

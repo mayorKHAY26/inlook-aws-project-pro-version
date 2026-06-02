@@ -14,6 +14,7 @@ resource "aws_instance" "jenkins" {
   subnet_id              = var.subnet_id
   vpc_security_group_ids = [var.jenkins_sg_id]
   iam_instance_profile   = aws_iam_instance_profile.jenkins_profile.name
+  key_name               = aws_key_pair.jenkins.key_name
 
   user_data = <<-EOF
     #!/bin/bash
