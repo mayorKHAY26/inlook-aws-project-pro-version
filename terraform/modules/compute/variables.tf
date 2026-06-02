@@ -2,10 +2,13 @@ variable "project_name" {}
 variable "display_name" {}
 variable "environment" {}
 variable "aws_region" {}
-
 variable "vpc_id" {}
 
 variable "private_subnet_ids" {
+  type = list(string)
+}
+
+variable "public_subnet_ids" {
   type = list(string)
 }
 
