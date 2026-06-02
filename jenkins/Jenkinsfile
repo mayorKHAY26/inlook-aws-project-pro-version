@@ -4,12 +4,10 @@ pipeline {
     environment {
         APP_DISPLAY_NAME = 'inlook-webmail-Komotehinse-version'
         APP_SAFE_NAME    = 'inlook-webmail-komotehinse'
-
-        AWS_REGION = 'us-east-1'
+        AWS_REGION       = 'us-east-1'
     }
 
     stages {
-
         stage('Checkout') {
             steps {
                 checkout scm
@@ -80,15 +78,33 @@ pipeline {
                 '''
             }
         }
+
+        stage('Deploy to ECS') {
+            steps {
+                sh '''
+                aws ecs update-service \
+                  --cluster inlook-webmail-komotehinse-dev-ecs-cluster \
+                  --service inlook-webmail-komotehinse-dev-frontend-service \
+                  --force-new-deployment \
+                  --region ${AWS_REGION}
+
+                aws ecs update-service \
+                  --cluster inlook-webmail-komotehinse-dev-ecs-cluster \
+                  --service inlook-webmail-komotehinse-dev-backend-service \
+                  --force-new-deployment \
+                  --region ${AWS_REGION}
+                '''
+            }
+        }
     }
 
     post {
         success {
-            echo "${APP_DISPLAY_NAME} build completed successfully."
+            echo "${APP_DISPLAY_NAME} build and deployment completed successfully."
         }
 
         failure {
-            echo "${APP_DISPLAY_NAME} build failed."
+            echo "${APP_DISPLAY_NAME} build or deployment failed."
         }
     }
 }
