@@ -1,3 +1,4 @@
+import React from "react";
 function MailViewer({ message }) {
   return (
     <div className="mail-card">

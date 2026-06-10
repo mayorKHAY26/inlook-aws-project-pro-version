@@ -1,3 +1,4 @@
+import React from "react";
 import MailViewer from "./MailViewer";
 
 function SentMail({ messages }) {
